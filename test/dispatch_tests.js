@@ -29,7 +29,6 @@ var testServ = brubeck.createServer({
 });
 testServ.listen(8080);
 
-var testsFailed = 0;
 brubeck.test.server.host = 'localhost';
 brubeck.test.server.port = 8080;
 
@@ -50,5 +49,9 @@ brubeck.test.server.addGetTest('/quux', {
   body: 'No handler for request'
 });
 
-brubeck.test.server.runTests();
+brubeck.test.server.addPutTest('/bar?foo=1&quux=2', {
+  statusCode: 200,
+  body: 'foo: 1\nquux: 2\n'
+});
 
+brubeck.test.server.runTests(function() { testServ.close(); });
