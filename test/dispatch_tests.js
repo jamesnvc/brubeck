@@ -32,25 +32,23 @@ testServ.listen(8080);
 var testsFailed = 0;
 brubeck.test.server.host = 'localhost';
 brubeck.test.server.port = 8080;
-var onFail = function() { testsFailed++ };
 
 // Test 1
-brubeck.test.server.getTest('/foo', {
+brubeck.test.server.addGetTest('/foo', {
   statusCode: 200,
   body: 'foo'
-}, onFail);
+});
 
 // Test 2
-brubeck.test.server.getTest('/bar', {
+brubeck.test.server.addGetTest('/bar', {
   statusCode: 200,
   body: 'bar'
-}, onFail);
+});
 
-brubeck.test.server.getTest('/bar', {
+brubeck.test.server.addGetTest('/quux', {
   statusCode: 400,
-  body: 'bar'
-}, onFail);
+  body: 'No handler for request'
+});
 
-console.log("Failed " + testsFailed + " tests");
+brubeck.test.server.runTests();
 
-testServ.close();
