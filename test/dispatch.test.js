@@ -1,33 +1,27 @@
 var brubeck = require('../lib/brubeck'),
     http    = require('http'),
-    url     = require('url');
+    url     = require('url'),
+    u       = brubeck.util;
 
 var testServ = brubeck.createServer({
   GET: {
-    '/foo': function(req, res) {
+    '/foo': function(res) {
       res.write('foo');
-      res.end();
     },
 
-    '/bar': function(req, res) {
+    '/bar': function(res) {
       res.write('bar');
-      res.end();
     }
   },
 
   PUT: {
-    '/bar': function(req, res) {
-      var params = url.parse(req.url, true).query;
-      for (var elt in params) {
-        if (params.hasOwnProperty(elt)) {
-          res.write(elt + ': ' + params[elt] + '\n');
-        }
-      }
-      res.end();
+    '/bar': function(res) {
+      u.each(this.params, function(param) {
+        res.write(param + ': ' + this + '\n');
+      });
     }
   }
 });
-testServ.listen(8080);
 
 brubeck.test.server.host = 'localhost';
 brubeck.test.server.port = 8080;
