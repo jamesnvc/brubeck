@@ -1,4 +1,5 @@
 var brubeck = require('../lib/brubeck'),
+    assert  = require('assert'),
     http    = require('http'),
     url     = require('url'),
     u       = brubeck.util;
@@ -23,29 +24,39 @@ var testServ = brubeck.createServer({
   }
 });
 
-brubeck.test.server.host = 'localhost';
-brubeck.test.server.port = 8080;
+exports['test GET /foo'] = function() {
+  assert.response(testServ, {
+    url: '/foo'
+  }, {
+    body: 'foo',
+    status: 200
+  });
+};
 
-// Test 1
-brubeck.test.server.addGetTest('/foo', {
-  statusCode: 200,
-  body: 'foo'
-});
+exports['test GET /bar'] = function() {
+  assert.response(testServ, {
+    url: '/bar'
+  }, {
+    status: 200,
+    body: 'bar'
+  });
+};
 
-// Test 2
-brubeck.test.server.addGetTest('/bar', {
-  statusCode: 200,
-  body: 'bar'
-});
+exports['test GET nonexistant'] = function() {
+  assert.response(testServ, {
+    url: '/quux'
+  }, {
+    status: 400,
+    body: 'No handler for request'
+  });
+};
 
-brubeck.test.server.addGetTest('/quux', {
-  statusCode: 400,
-  body: 'No handler for request'
-});
-
-brubeck.test.server.addPutTest('/bar?foo=1&quux=2', {
-  statusCode: 200,
-  body: 'foo: 1\nquux: 2\n'
-});
-
-brubeck.test.server.runTests(function() { testServ.close(); });
+exports['test PUT'] = function() {
+  assert.response(testServ, {
+    url: '/bar?foo=1&quux=2',
+    method: 'PUT'
+  }, {
+    status: 200,
+    body: 'foo: 1\nquux: 2\n'
+  });
+};
