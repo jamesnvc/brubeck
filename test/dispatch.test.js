@@ -21,6 +21,14 @@ var testServ = brubeck.createServer({
         res.write(param + ': ' + this + '\n');
       });
     }
+  },
+
+  POST: {
+    '/baz': function(res) {
+      u.each(JSON.parse(this.data), function(datum) {
+        res.write(datum + ': ' + this + '\n');
+      });
+    }
   }
 });
 
@@ -58,5 +66,19 @@ exports['test PUT'] = function() {
   }, {
     status: 200,
     body: 'foo: 1\nquux: 2\n'
+  });
+};
+
+exports['test POST'] = function() {
+  assert.response(testServ, {
+    url: '/baz',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify({foo: 1, bar: 'aoeu'})
+  }, {
+    status: 200,
+    body: 'foo: 1\nbar: aoeu\n'
   });
 };
