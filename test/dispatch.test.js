@@ -2,32 +2,40 @@ var brubeck = require('../lib/brubeck'),
     assert  = require('assert'),
     http    = require('http'),
     url     = require('url'),
+    query   = require('querystring'),
     u       = brubeck.util;
 
 var testServ = brubeck.createServer({
   GET: {
-    '/foo': function(res) {
-      res.write('foo');
+    '/foo': function() {
+      this.write('foo');
     },
 
-    '/bar': function(res) {
-      res.write('bar');
+    '/bar': function() {
+      this.write('bar');
     }
   },
 
   PUT: {
-    '/bar': function(res) {
+    '/bar': function() {
+      var write = this.write;
       u.each(this.params, function(param) {
-        res.write(param + ': ' + this + '\n');
+        write(param + ': ' + this + '\n');
       });
     }
   },
 
   POST: {
-    '/baz': function(res) {
-      u.each(JSON.parse(this.data), function(datum) {
-        res.write(datum + ': ' + this + '\n');
+    '/baz': function() {
+      var write = this.write;
+      u.each(query.parse(this.data), function(datum) {
+        write(datum + ': ' + this + '\n');
       });
+    },
+
+    default: function() {
+      this.writeHead(201, {'Content-Type': 'application/x-www-form-urlencoded'});
+      this.write(this.data);
     }
   }
 });
@@ -73,12 +81,20 @@ exports['test POST'] = function() {
   assert.response(testServ, {
     url: '/baz',
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    data: JSON.stringify({foo: 1, bar: 'aoeu'})
+    data: 'foo=1&bar=aoeu'
   }, {
     status: 200,
     body: 'foo: 1\nbar: aoeu\n'
+  });
+};
+
+exports['test POST default'] = function() {
+  assert.response(testServ, {
+    url: '/quux',
+    method: 'POST',
+    data: 'jackdaws=love&my=sphinx'
+  }, {
+    status: 201,
+    body: 'jackdaws=love&my=sphinx'
   });
 };
