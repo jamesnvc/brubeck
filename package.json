@@ -1,4 +1,19 @@
 {
   "name": "brubeck",
-  "main": "lib/brubeck.js"
+  "description": "A RESTful micro web framework",
+  "version": "0.0.0",
+  "repository": {
+    "url": ""
+  },
+  "author": "James Cash <james.cash@occasionallycogent.com>",
+  "main": "lib/brubeck.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "expresso"
+  },
+  "engines": {
+    "node": "0.4.2"
+  }
 }
