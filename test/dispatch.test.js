@@ -13,6 +13,14 @@ var testServ = brubeck.createServer({
 
     '/bar': function() {
       this.write('bar');
+    },
+
+    '/long': function() {
+      setTimeout(u.bind(this, function() {
+        this.write('done');
+        this.end();
+      }), 500);
+      return brubeck.WAIT;
     }
   },
 
@@ -28,7 +36,7 @@ var testServ = brubeck.createServer({
   POST: {
     '/baz': function() {
       var write = this.write;
-      u.each(query.parse(this.data), function(datum) {
+      u.each(this.params, function(datum) {
         write(datum + ': ' + this + '\n');
       });
     },
@@ -96,5 +104,14 @@ exports['test POST default'] = function() {
   }, {
     status: 201,
     body: 'jackdaws=love&my=sphinx'
+  });
+};
+
+exports['test long-running GET'] = function() {
+  assert.response(testServ, {
+    url: '/long'
+  }, {
+    status: 200,
+    body: 'done'
   });
 };

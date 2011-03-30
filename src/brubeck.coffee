@@ -1,10 +1,15 @@
-http = require 'http'
-url  = require 'url'
-util = require './util/util.js'
+http  = require 'http'
+url   = require 'url'
+query = require 'querystring'
+util  = require './util/util.js'
 
-exports.util = util
+brubeck = exports
 
-exports.createServer = (servObject) ->
+brubeck.WAIT = 4321
+
+brubeck.util = util
+
+brubeck.createServer = (servObject) ->
   server = http.createServer (request, response) ->
     urlObj        = url.parse request.url, true
     requestUrl    = urlObj.pathname
@@ -22,13 +27,17 @@ exports.createServer = (servObject) ->
       request: request
       response: response
       data: null
-      write: exports.util.hitch(response, response.write)
-      writeHead: exports.util.hitch(response, response.writeHead)
+      write: brubeck.util.bind(response, response.write)
+      writeHead: brubeck.util.bind(response, response.writeHead)
+      end: brubeck.util.bind(response, response.end)
     recieved = []
     request.on 'data', (chunk) -> recieved.push chunk
     request.on 'end', ->
       context.data = recieved.join ''
-      handler.call context
-      response.end()
+      if request.method is 'POST'
+        context.params = query.parse(context.data)
+      ret = handler.call context
+      if ret isnt brubeck.WAIT
+        response.end()
   server
 
