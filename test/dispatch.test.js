@@ -41,7 +41,7 @@ var testServ = brubeck.createServer({
       });
     },
 
-    default: function() {
+    'default': function() {
       this.writeHead(201, {'Content-Type': 'application/x-www-form-urlencoded'});
       this.write(this.data);
     }

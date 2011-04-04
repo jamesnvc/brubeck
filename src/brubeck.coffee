@@ -1,13 +1,15 @@
-http  = require 'http'
-url   = require 'url'
-query = require 'querystring'
-util  = require './util/util.js'
+http       = require 'http'
+url        = require 'url'
+query      = require 'querystring'
+util       = require './util/util.js'
+templating = require './templating/templating.js'
 
 brubeck = exports
 
 brubeck.WAIT = 4321
 
 brubeck.util = util
+brubeck.templating = templating
 
 brubeck.createServer = (servObject) ->
   server = http.createServer (request, response) ->
@@ -30,6 +32,8 @@ brubeck.createServer = (servObject) ->
       write: brubeck.util.bind(response, response.write)
       writeHead: brubeck.util.bind(response, response.writeHead)
       end: brubeck.util.bind(response, response.end)
+    context.render = brubeck.util.bind(context, brubeck.templating.render)
+
     recieved = []
     request.on 'data', (chunk) -> recieved.push chunk
     request.on 'end', ->
@@ -40,4 +44,3 @@ brubeck.createServer = (servObject) ->
       if ret isnt brubeck.WAIT
         response.end()
   server
-
