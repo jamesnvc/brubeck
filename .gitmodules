@@ -1,3 +1,6 @@
 [submodule "node_modules/mu"]
 	path = node_modules/mu
 	url = https://github.com/raycmorgan/Mu.git
+[submodule "example"]
+	path = example
+	url = git@github.com:jamesnvc/brubeck-example.git
