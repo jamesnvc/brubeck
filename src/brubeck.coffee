@@ -16,6 +16,7 @@ brubeck.createServer = (servObject) ->
     urlObj        = url.parse request.url, true
     requestUrl    = urlObj.pathname
     methodHandler = servObject[request.method] || {}
+    # TODO: Should be able to use wildcards/variables in handler paths
     if requestUrl of methodHandler
       handler = methodHandler[requestUrl]
     else if 'default' of methodHandler
@@ -24,6 +25,7 @@ brubeck.createServer = (servObject) ->
       handler = ->
         response.writeHead '400', 'Content-Type': 'text/plain'
         response.write 'No handler for request'
+
     context =
       params: urlObj.query
       request: request
