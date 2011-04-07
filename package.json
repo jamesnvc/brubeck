@@ -1,7 +1,6 @@
 {
   "name": "brubeck",
   "description": "A RESTful micro web framework",
-  "repository":
   "version": "0.0.0",
   "repository": {
     "type": "git",
