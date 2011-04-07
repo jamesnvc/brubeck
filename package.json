@@ -1,10 +1,10 @@
 {
   "name": "brubeck",
   "description": "A RESTful micro web framework",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jamesnvc/brubeck"
+    "url": "git://github.com/jamesnvc/brubeck.git"
   },
   "author": "James Cash <james.cash@occasionallycogent.com>",
   "main": "lib/brubeck.js",
@@ -17,5 +17,8 @@
   },
   "engines": {
     "node": "0.4.2"
-  }
+  },
+  "files": [
+    ""
+  ]
 }
