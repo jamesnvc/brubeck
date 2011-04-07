@@ -1,9 +1,11 @@
 {
   "name": "brubeck",
   "description": "A RESTful micro web framework",
+  "repository":
   "version": "0.0.0",
   "repository": {
-    "url": ""
+    "type": "git",
+    "url": "https://github.com/jamesnvc/brubeck"
   },
   "author": "James Cash <james.cash@occasionallycogent.com>",
   "main": "lib/brubeck.js",
@@ -11,6 +13,7 @@
     "lib": "lib"
   },
   "scripts": {
+    "preinstall": "coffee -o lib -c src",
     "test": "expresso"
   },
   "engines": {
